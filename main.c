@@ -24,9 +24,9 @@ size -= '0';
    mvprintw(0, 0, "start");
 	 refresh();
     for(int i = 0; i < size; i++)  {
-			list = body_gen(list, 1);
+			var = body_gen(var, 1);
 //		mvprintw(7, 2, "x:%i 2nd x:%i",list->x, var->x);	
-		 CO_UPDATE(list);
+		 CO_UPDATE(var);
 //		 var = list->next;
 		}
 		getch();
@@ -64,16 +64,16 @@ size -= '0';
     getch();
 	  clear();
 		print_body(list);
-		var = list;
+		list = var;
 
 		for (int i = 0; i < 70; i++) {
 			input();
-			var = movement(var);
-			CO_UPDATE(var);
+			list = movement(list);
+			CO_UPDATE(list);
 			clear();
-			print_body(var);
-			mvprintw(10, 5, "Head: %p",var);
-			mvprintw(10, 5, "Head: %p, x: %i, y: %i",var, var->x, var->y);
+			print_body(list);
+			mvprintw(10, 5, "Head: %p",list);
+			mvprintw(10, 5, "Head: %p, x: %i, y: %i",list, list->x, list->y);
 			getch();	
 			napms(100);
 		}
