@@ -18,15 +18,26 @@ int size = getch();
 size -= '0' - 1;
 	// Initial body:
 	list = body_gen(list, size); // working properly
-	  var = list;
+	print_body(list);
+	var = list;
 		int i = 0;
-		while(var->next != NULL)  {
-			var->x = i;
-			var->y = 0;
-			var = var->next;
-			i++;
-			mvprintw(i, 4, "Node %p \n", var);
+
+/*		for(i = 2; i >= 0; i--)  {
+	     var->x = i;
+			 var->y = 0;
+			 var = var->next;
 		}
+	*
+			mvprintw(i, 4, "Node %p \n", var);
+			refresh();
+		}*/
+		node *temp = var->next;
+		temp->x = var->x + 1;
+		mvprintw(7, 2, "x:%i 2nd x:%i",var->x, temp->x);
+		
+		 CO_UPDATE(var);
+     print_body(var);
+		 getch();
 
 		// 2. Print the values using mvprintw (at specified coordinates)
     mvprintw(20, 0, "KEY_UP: %d", KEY_UP);
@@ -39,7 +50,7 @@ size -= '0' - 1;
     refresh();
 
 	  
-    TAIL_DELET(list);
+//    TAIL_DELET(list);
 	//	var = list;
 	//	i = 0;
 
@@ -59,11 +70,14 @@ size -= '0' - 1;
 		var = list;
 
 		for (int i = 0; i < 70; i++) {
+			input();
 			var = movement(var);
+			CO_UPDATE(var);
 			clear();
 			print_body(var);
 			mvprintw(10, 5, "Head: %p",var);
-//			getch();	
+			mvprintw(10, 5, "Head: %p, x: %i, y: %i",var, var->x, var->y);
+			getch();	
 			napms(100);
 		}
 

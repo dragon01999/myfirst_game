@@ -51,4 +51,7 @@ node* movement(struct node *ptr);
 
     // print body
 
+void CO_UPDATE(struct node *ptr);
+
+
 #endif

@@ -19,10 +19,13 @@ void Food_gen(struct node *food)
 // Function for printing body
 void print_body(struct node *ptr)
 {
+  int i = 12;
   node *a = ptr;
   while (a->next != NULL)  {
     mvaddch(a->y, a->x, 'o');
+    mvprintw(i, 5, "x: %i, y: %i", a->x, a->y);
     refresh();
+    i++;
     a = a->next;
   }
 }
@@ -40,15 +43,34 @@ node* body_gen(struct node *ptr, int size)
   }
   return head;
 }
-/*
-void coordinates_Update(struct node *ptr)
-{
-  node *temp = NULL;
-  for(temp = ptr; temp != NULL; temp = temp->next)  {
-     temp->x = 
-  
 
- */
+void CO_UPDATE(struct node *ptr)
+{
+  int x, y;
+
+  getmaxyx(stdscr, y, x);
+  node *second = ptr->next;
+  
+  if (CURRENT_DIR == RIGHT)  {
+     ptr->x = (second->x + 1) % x;
+     ptr->y = second->y;
+  }
+ /* else if (CURRENT_DIR == UP)  {
+        if (ptr->y == 0) {
+        ptr->y = y;
+        ptr->x = ptr->x;
+        }
+    ptr->x = second->x;
+    ptr->y = ptr->y - 1;
+      
+  }*/
+   else if (CURRENT_DIR == DOWN)  {
+          ptr->y = second->y+1;
+          ptr->x = second->x;
+   }
+   mvprintw(30, 4, "Y: %i X: %i", second->y, second->x);
+refresh();
+}
 
 void collision(struct node *ptr)
 {
@@ -63,7 +85,7 @@ void collision(struct node *ptr)
        return;
 }
 
-// Function for wrap-around
+/* Function for wrap-around
 int WR_AROUND(struct node *ptr) 
 {
   int MAX_X, MAX_Y;
@@ -81,7 +103,7 @@ int WR_AROUND(struct node *ptr)
   }
     return 0; 
 }
-
+*/
 
 // Function for movement
 node* movement(struct node *ptr)
@@ -92,10 +114,10 @@ node* movement(struct node *ptr)
 //    WR_AROUND(ptr);
     // Create new head and update coordinates
     ptr = body_gen(ptr, size);
-    int x, y;
-    getmaxyx(stdscr, y, x);
-    ptr->x = (temp->x + 1) % x;
-    ptr->y = temp->y;
+   // int x, y;
+   // getmaxyx(stdscr, y, x);
+//    ptr->x = (temp->x + 1) % x;
+  //  ptr->y = temp->y;
     /*int bl =  WR_AROUND(ptr);
     if (bl == 1)
       ptr->y = 0;
