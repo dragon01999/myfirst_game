@@ -21,9 +21,10 @@ void print_body(struct node *ptr)
 {
   int i = 12;
   node *a = ptr;
-  while (a->next != NULL)  {
+  while (a != NULL)  {
     mvaddch(a->y, a->x, 'o');
     mvprintw(i, 5, "x: %i, y: %i", a->x, a->y);
+    mvprintw(i+4, 5,"%i node: %p", i - 12, a);
     refresh();
     i++;
     a = a->next;
@@ -50,8 +51,11 @@ void CO_UPDATE(struct node *ptr)
 
   getmaxyx(stdscr, y, x);
   node *second = ptr->next;
-  
-  if (CURRENT_DIR == RIGHT)  {
+  if (ptr != NULL && ptr->next == NULL)  {
+     ptr->x = 0;
+     return;
+  }
+  else if (CURRENT_DIR == RIGHT)  {
      ptr->x = (second->x + 1) % x;
      ptr->y = second->y;
   }
@@ -114,6 +118,8 @@ node* movement(struct node *ptr)
 //    WR_AROUND(ptr);
     // Create new head and update coordinates
     ptr = body_gen(ptr, size);
+//    CO_UPDATE(ptr);
+    ptr->x = temp->x + 1; 
    // int x, y;
    // getmaxyx(stdscr, y, x);
 //    ptr->x = (temp->x + 1) % x;

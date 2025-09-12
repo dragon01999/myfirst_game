@@ -15,27 +15,24 @@ keypad(stdscr, TRUE);
 
 node *n, *list = NULL, *var;
 int size = getch();
-size -= '0' - 1;
+size -= '0';
 	// Initial body:
-	list = body_gen(list, size); // working properly
-	print_body(list);
+//	list = body_gen(list, size); // working properly
+//	print_body(list);
 	var = list;
-		int i = 0;
-
-/*		for(i = 2; i >= 0; i--)  {
-	     var->x = i;
-			 var->y = 0;
-			 var = var->next;
+	//	int i = 0;
+   mvprintw(0, 0, "start");
+	 refresh();
+    for(int i = 0; i < size; i++)  {
+			list = body_gen(list, 1);
+//		mvprintw(7, 2, "x:%i 2nd x:%i",list->x, var->x);	
+		 CO_UPDATE(list);
+//		 var = list->next;
 		}
-	*
-			mvprintw(i, 4, "Node %p \n", var);
-			refresh();
-		}*/
-		node *temp = var->next;
-		temp->x = var->x + 1;
-		mvprintw(7, 2, "x:%i 2nd x:%i",var->x, temp->x);
-		
-		 CO_UPDATE(var);
+		getch();
+		 mvprintw(2,2, "Fine");
+		 refresh();
+		 getch();
      print_body(var);
 		 getch();
 
@@ -54,7 +51,7 @@ size -= '0' - 1;
 	//	var = list;
 	//	i = 0;
 
-    var = list;
+/*    var = list;
     i = 0;
     while(var->next != NULL)  {
       var->x = i;
@@ -62,7 +59,7 @@ size -= '0' - 1;
       var = var->next;
       i++;
       mvprintw(i + 5, 4, "Node %p \n", var);
-    }
+    }*/
 		refresh();
     getch();
 	  clear();
