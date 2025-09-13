@@ -4,7 +4,7 @@
 #include<ncurses.h>
 #include"util.h"
 
-void Food_gen(struct node *ptr, struct node *food)
+void food_gen(struct node *ptr, struct node *food)
 {
       int x, y;
       bool status = TRUE;
@@ -13,7 +13,7 @@ void Food_gen(struct node *ptr, struct node *food)
 	srand(time(NULL)); //seed generator
         food->x = (rand() % x);
         food->y = (rand() % y);
-        if (FD_IS_COLLIDING(ptr, food))
+        if (fd_is_colliding(ptr, food))
           status = TRUE;
         else
           status = FALSE;
@@ -40,7 +40,7 @@ void print_body(struct node *ptr)
 
 // Function to generate body.
 
-node* body_gen(struct node *ptr, int size)
+node* gen_body(struct node *ptr, int size)
 {
   node *head = ptr;
   node *temp = NULL;
@@ -52,7 +52,7 @@ node* body_gen(struct node *ptr, int size)
   return head;
 }
 
-bool FD_IS_COLLIDING(struct node *ptr, struct node *food)
+bool fd_is_colliding(struct node *ptr, struct node *food)
 {
   while (ptr != NULL)  {
     if (ptr->x == food->x && ptr->y == food->y)
@@ -65,7 +65,7 @@ bool FD_IS_COLLIDING(struct node *ptr, struct node *food)
 
 
 
-void CO_UPDATE(struct node *ptr)
+void co_update(struct node *ptr)
 {
   int MAX_X, MAX_Y;
   node *second = NULL;
@@ -76,6 +76,7 @@ void CO_UPDATE(struct node *ptr)
     case RIGHT:
          if (ptr != NULL && ptr->next == NULL)  {
             ptr->x = 0;
+            ptr->y = 1;
             break;
         }
          else {
@@ -93,7 +94,7 @@ void CO_UPDATE(struct node *ptr)
          ptr->y = second->y;
          break;
     case UP:
-         if (second->y <= 0)  {
+         if (second->y <= 1)  {
            ptr->y = MAX_Y - 1;
            ptr->x = second->x;
            break;
@@ -101,7 +102,12 @@ void CO_UPDATE(struct node *ptr)
          ptr->y = second->y - 1;
          ptr->x = second->x;
          break;
-    case DOWN:
+    case DOWN: // capping y to 1 so i can use y 0
+         if (second->y == MAX_Y - 1) {
+             ptr->y = 1;
+             ptr->x = second->x;
+             break;
+         }
          ptr->y = (second->y + 1) % MAX_Y;
          ptr->x = second->x;
 
@@ -114,27 +120,21 @@ void CO_UPDATE(struct node *ptr)
 }
 
     
-         
-
-
-
-
-
-
-
 
 void collision(struct node *ptr)
 {
+  int i = 0;
   node *temp = ptr;
   while (ptr != NULL)  {
     ptr = ptr->next;
     if (ptr == NULL)
         return;
-    if (temp->x == ptr->x && temp->y == ptr->y) {
-       GAME_STATUS = FALSE;
-       return;
+    if (i > 2)
+        if (temp->x == ptr->x && temp->y == ptr->y) {
+             GAME_STATUS = FALSE;
+             return;
     }
-    
+    i++;
   }
        return;
 }
@@ -167,7 +167,7 @@ node* movement(struct node *ptr)
     node *temp = ptr;
 //    WR_AROUND(ptr);
     // Create new head and update coordinates
-    ptr = body_gen(ptr, size);
+    ptr = gen_body(ptr, size);
 //    CO_UPDATE(ptr);
 //    ptr->x = temp->x + 1; 
    // int x, y;

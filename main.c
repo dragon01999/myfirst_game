@@ -4,97 +4,71 @@
 #include<ncurses.h>
 #include"util.h"
 
+int curr_score = 0;
 bool GAME_STATUS = TRUE;
 Direction CURRENT_DIR = RIGHT;
-int SNAKE_SIZE = 3;
+int snake_size = 3;
 
-int main(int argc, char *argv[])  {
+int main(void)
+{   
+    // will intialize screen, input etc...
+    initscr();
+    start_color();
+    init_pair(1, COLOR_GREEN, COLOR_BLACK);
+    init_pair(2, COLOR_RED, COLOR_BLUE);
+    noecho();
+    keypad(stdscr, TRUE);
+    cbreak();
+    nodelay(stdscr, TRUE);
+    node *head = NULL;
+    node *food = NULL;
+    food = creat();
+    int size = 1;
 
-initscr();
-noecho();
-keypad(stdscr, TRUE);
-mvprintw(3, 55, "h");
-node *list = NULL, *var;
-node *food = creat();
-int size = getch();
-size -= '0';
-	// Initial body:
-//	list = body_gen(list, size); // working properly
-//	print_body(list);
-	var = list;
-	//	int i = 0;
-   mvprintw(0, 0, "start");
-	 refresh();
-    for(int i = 0; i < size; i++)  {
-			var = body_gen(var, 1);
-//		mvprintw(7, 2, "x:%i 2nd x:%i",list->x, var->x);	
-			 CO_UPDATE(var);
-//		 var = list->next;
-		}
-		getch();
-		 mvprintw(2,2, "Fine");
-		 refresh();
-		 getch();
-     print_body(var);
-		 Food_gen(var, food);
-		 getch();
+    // Will intialize body
+    for (int i = 0; i < INITIAL_SIZE; i++) {
+        head = gen_body(head, size);
+        co_update(head);
+    }
+        
+    printw("Fine");
+    // Generates intial food
+    food_gen(head, food);
+    //printing score and highest score on screen
+    mvprintw(0, 3, "Hi");
+    // Main game loop
+      while (GAME_STATUS) {
+//        input();
+        clear();
+        mvaddch(food->y, food->x, '@');
+        collision(head);
+        print_body(head);
+        if (head->x == food->x && head->y == food->y) {
+            snake_size += 1;
+            head = gen_body(head, 1);
+            co_update(head);
+            food_gen(head, food);
+            mvaddch(food->y, food->x, '@');
+            refresh();
+            curr_score += 10;
+        }   
+            attron(COLOR_PAIR(2));
+            mvprintw(0, 4, "CURR_SCORE: %i", curr_score);
+            attroff(COLOR_PAIR(2));
+            refresh();
+            head = movement(head);
+            co_update(head);
+            napms(1000/2);
+            input();
+    }
 
-		// 2. Print the values using mvprintw (at specified coordinates)
-    mvprintw(20, 0, "KEY_UP: %d", KEY_UP);
-    mvprintw(21, 0, "KEY_DOWN: %d", KEY_DOWN);
-    mvprintw(22, 0, "KEY_LEFT: %d", KEY_LEFT);
-    mvprintw(23, 0, "KEY_RIGHT: %d", KEY_RIGHT);
-    input();
-		mvprintw(24, 0, "CURR_DIR: %i", CURRENT_DIR);
-    // 3. Update the screen to show the changes
-    refresh();
-    
-	  
-//    TAIL_DELET(list);
-	//	var = list;
-	//	i = 0;
-
-/*    var = list;
-    i = 0;
-    while(var->next != NULL)  {
-      var->x = i;
-      var->y = 0;
-      var = var->next;
-      i++;
-      mvprintw(i + 5, 4, "Node %p \n", var);
-    }*/
-		refresh();
+    clear();
     getch();
-	  clear();
-		print_body(list);
-		list = var;
-
-		while (GAME_STATUS)  {	
-			input();
-			clear();
-			list = movement(list);
-			CO_UPDATE(list);
-			print_body(list);
-			collision(list);
-			if (list->x == food->x && list->y == food->y)
-			{
-				SNAKE_SIZE += 1;
-				Food_gen(list, food);
-			//	mvaddch(food->y, food->x, '@');
-		    list = body_gen(list, 1);
-				CO_UPDATE(list);
-			}
-		
-		//	print_body(list);
-			mvprintw(10, 5, "Head: %p",list);
-			mvprintw(10, 5, "Head: %p, x: %i, y: %i",list, list->x, list->y);
-			mvaddch(food->y, food->x, '@');
-			getch();	
-			napms(100);
-		}
-
-		
-	getch();
-	endwin();
-	return 0;
+    free_all(&head);
+    if (head != NULL)
+        printw("exists %p", head);
+    printw("deleted all %p", head);
+    getch();
+    endwin();
+    return 0;
 }

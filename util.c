@@ -54,7 +54,7 @@ void input()
 			CURRENT_DIR = key;
 			break;
     case KEY_DOWN:	
-		  if (CURRENT_DIR != DOWN) 
+		  if (CURRENT_DIR != UP) 
 			CURRENT_DIR = key;
 			break;
 		case KEY_LEFT:
@@ -74,4 +74,15 @@ void input()
 	}
 
 }
-
+    // Function for freeing all nodes
+void free_all(struct node **ptr)
+{
+    node *temp = *ptr;
+    while (*ptr != NULL) {
+        temp = temp->next;
+        free(*ptr);
+        *ptr = temp;
+    }
+    *ptr = NULL;  // preventing dangling pointers
+}
+        

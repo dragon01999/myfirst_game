@@ -1,23 +1,32 @@
-   # Compuler name
+# Compiler name and flags
 CC = clang
+CFLAGS = -g -Wall -Wextra
 
-   # Defining linker
+# Linker flags (goes to the linker, not the compiler)
 LDFLAGS = -lncurses
 
-SRCS  = main.c util.c mechanix.c
+# Source and object files
+SRCS = main.c util.c mechanix.c
+OBJS = $(SRCS:.c=.o)
 
-   # Exe file name
+# Executable name
 EXEC = snake
 
-   # Default rule to build program, its phony target
+.PHONY: all clean
+
 all: $(EXEC)
 
-   # Rule to create exe file
-$(EXEC): $(SRCS)
-	$(CC) $(SRCS) -o $(EXEC) $(LDFLAGS)
+# Rule to create the executable from object files
+$(EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $(EXEC) $(LDFLAGS)
 
-   # Rule to clean exe which arent required 
+# Generic rule to compile a .c file into a .o file
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Rule to clean all intermediate and executable files
 clean:
-	rm -f $(EXEC)
+	rm -f $(EXEC) $(OBJS)
+
 
 
