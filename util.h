@@ -23,7 +23,7 @@ typedef enum
 extern Direction CURRENT_DIR; // Current direction
 
 // For generating food on ramdom loc
-void Food_gen(struct node *food);
+void Food_gen(struct node *ptr, struct node *food);
 
     // body print
 void print_body(struct node *ptr);
@@ -52,6 +52,10 @@ node* movement(struct node *ptr);
     // print body
 
 void CO_UPDATE(struct node *ptr);
+
+
+// checks if food is spawning on snake body
+bool FD_IS_COLLIDING(struct node *ptr, struct node *food);
 
 
 #endif

@@ -6,6 +6,7 @@
 
 bool GAME_STATUS = TRUE;
 Direction CURRENT_DIR = RIGHT;
+int SNAKE_SIZE = 3;
 
 int main(int argc, char *argv[])  {
 
@@ -13,7 +14,8 @@ initscr();
 noecho();
 keypad(stdscr, TRUE);
 mvprintw(3, 55, "h");
-node *n, *list = NULL, *var;
+node *list = NULL, *var;
+node *food = creat();
 int size = getch();
 size -= '0';
 	// Initial body:
@@ -34,6 +36,7 @@ size -= '0';
 		 refresh();
 		 getch();
      print_body(var);
+		 Food_gen(var, food);
 		 getch();
 
 		// 2. Print the values using mvprintw (at specified coordinates)
@@ -45,7 +48,7 @@ size -= '0';
 		mvprintw(24, 0, "CURR_DIR: %i", CURRENT_DIR);
     // 3. Update the screen to show the changes
     refresh();
-
+    
 	  
 //    TAIL_DELET(list);
 	//	var = list;
@@ -66,14 +69,26 @@ size -= '0';
 		print_body(list);
 		list = var;
 
-		for (int i = 0; i < 70; i++) {
+		while (GAME_STATUS)  {	
 			input();
+			clear();
 			list = movement(list);
 			CO_UPDATE(list);
-			clear();
 			print_body(list);
+			collision(list);
+			if (list->x == food->x && list->y == food->y)
+			{
+				SNAKE_SIZE += 1;
+				Food_gen(list, food);
+			//	mvaddch(food->y, food->x, '@');
+		    list = body_gen(list, 1);
+				CO_UPDATE(list);
+			}
+		
+		//	print_body(list);
 			mvprintw(10, 5, "Head: %p",list);
 			mvprintw(10, 5, "Head: %p, x: %i, y: %i",list, list->x, list->y);
+			mvaddch(food->y, food->x, '@');
 			getch();	
 			napms(100);
 		}

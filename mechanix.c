@@ -4,13 +4,20 @@
 #include<ncurses.h>
 #include"util.h"
 
-void Food_gen(struct node *food)
+void Food_gen(struct node *ptr, struct node *food)
 {
       int x, y;
+      bool status = TRUE;
 	getmaxyx(stdscr, y, x);
+  while (status == TRUE)  {
 	srand(time(NULL)); //seed generator
         food->x = (rand() % x);
         food->y = (rand() % y);
+        if (FD_IS_COLLIDING(ptr, food))
+          status = TRUE;
+        else
+          status = FALSE;
+  }
 	mvaddch(food->y, food->x, '@');
 	refresh();
             return;
@@ -45,36 +52,18 @@ node* body_gen(struct node *ptr, int size)
   return head;
 }
 
-/*void CO_UPDATE(struct node *ptr)
+bool FD_IS_COLLIDING(struct node *ptr, struct node *food)
 {
-  int x, y;
+  while (ptr != NULL)  {
+    if (ptr->x == food->x && ptr->y == food->y)
+       return TRUE;
+    ptr = ptr->next;
+  }
+  return FALSE;
+}
 
-  getmaxyx(stdscr, y, x);
-  node *second = ptr->next;
-  if (ptr != NULL && ptr->next == NULL)  {
-     ptr->x = 0;
-     return;
-  }
-  else if (CURRENT_DIR == RIGHT)  {
-     ptr->x = (second->x + 1) % x;
-     ptr->y = second->y;
-  }
- else if (CURRENT_DIR == UP)  {
-        if (ptr->y == 0) {
-        ptr->y = y;
-        ptr->x = ptr->x;
-        }
-    ptr->x = second->x;
-    ptr->y = ptr->y - 1;
-      
-  }
-   else if (CURRENT_DIR == DOWN)  {
-          ptr->y = second->y+1;
-          ptr->x = second->x;
-   }
-   mvprintw(30, 4, "Y: %i X: %i", second->y, second->x);
-refresh();
-} */
+
+
 
 void CO_UPDATE(struct node *ptr)
 {
@@ -124,7 +113,6 @@ void CO_UPDATE(struct node *ptr)
 //  mvprintw(30, 4, "Y: %i X: %i", second->y, second->x);  refresh();
 }
 
-
     
          
 
@@ -139,11 +127,14 @@ void collision(struct node *ptr)
 {
   node *temp = ptr;
   while (ptr != NULL)  {
+    ptr = ptr->next;
+    if (ptr == NULL)
+        return;
     if (temp->x == ptr->x && temp->y == ptr->y) {
        GAME_STATUS = FALSE;
        return;
     }
-    ptr = ptr->next;
+    
   }
        return;
 }
