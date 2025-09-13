@@ -12,7 +12,7 @@ int main(int argc, char *argv[])  {
 initscr();
 noecho();
 keypad(stdscr, TRUE);
-
+mvprintw(3, 55, "h");
 node *n, *list = NULL, *var;
 int size = getch();
 size -= '0';
@@ -26,7 +26,7 @@ size -= '0';
     for(int i = 0; i < size; i++)  {
 			var = body_gen(var, 1);
 //		mvprintw(7, 2, "x:%i 2nd x:%i",list->x, var->x);	
-		 CO_UPDATE(var);
+			 CO_UPDATE(var);
 //		 var = list->next;
 		}
 		getch();

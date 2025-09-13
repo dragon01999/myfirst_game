@@ -45,7 +45,7 @@ node* body_gen(struct node *ptr, int size)
   return head;
 }
 
-void CO_UPDATE(struct node *ptr)
+/*void CO_UPDATE(struct node *ptr)
 {
   int x, y;
 
@@ -59,7 +59,7 @@ void CO_UPDATE(struct node *ptr)
      ptr->x = (second->x + 1) % x;
      ptr->y = second->y;
   }
- /* else if (CURRENT_DIR == UP)  {
+ else if (CURRENT_DIR == UP)  {
         if (ptr->y == 0) {
         ptr->y = y;
         ptr->x = ptr->x;
@@ -67,14 +67,73 @@ void CO_UPDATE(struct node *ptr)
     ptr->x = second->x;
     ptr->y = ptr->y - 1;
       
-  }*/
+  }
    else if (CURRENT_DIR == DOWN)  {
           ptr->y = second->y+1;
           ptr->x = second->x;
    }
    mvprintw(30, 4, "Y: %i X: %i", second->y, second->x);
 refresh();
+} */
+
+void CO_UPDATE(struct node *ptr)
+{
+  int MAX_X, MAX_Y;
+  node *second = NULL;
+  second = ptr->next;
+  getmaxyx(stdscr, MAX_Y, MAX_X);
+
+  switch(CURRENT_DIR) {
+    case RIGHT:
+         if (ptr != NULL && ptr->next == NULL)  {
+            ptr->x = 0;
+            break;
+        }
+         else {
+         ptr->x = (second->x + 1) % MAX_X;
+         ptr->y = second->y;
+         break;
+         }
+    case LEFT:
+         if (second->x <= 0)  {
+           ptr->x = MAX_X - 1;
+           ptr->y = second->y;
+           break;
+         }
+         ptr->x = second->x - 1;
+         ptr->y = second->y;
+         break;
+    case UP:
+         if (second->y <= 0)  {
+           ptr->y = MAX_Y - 1;
+           ptr->x = second->x;
+           break;
+         }
+         ptr->y = second->y - 1;
+         ptr->x = second->x;
+         break;
+    case DOWN:
+         ptr->y = (second->y + 1) % MAX_Y;
+         ptr->x = second->x;
+
+    default:
+         //Do nothing
+         break;
+  }
+  second = NULL;
+//  mvprintw(30, 4, "Y: %i X: %i", second->y, second->x);  refresh();
 }
+
+
+    
+         
+
+
+
+
+
+
+
 
 void collision(struct node *ptr)
 {
@@ -119,7 +178,7 @@ node* movement(struct node *ptr)
     // Create new head and update coordinates
     ptr = body_gen(ptr, size);
 //    CO_UPDATE(ptr);
-    ptr->x = temp->x + 1; 
+//    ptr->x = temp->x + 1; 
    // int x, y;
    // getmaxyx(stdscr, y, x);
 //    ptr->x = (temp->x + 1) % x;
