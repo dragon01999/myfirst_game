@@ -3,6 +3,8 @@
 
 #define INITIAL_SIZE 3
 extern bool GAME_STATUS;
+extern char FOOD_CHAR;
+extern char BODY_CHAR;
 
     // Body of the snake
 typedef struct node

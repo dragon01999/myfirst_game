@@ -8,6 +8,8 @@ int curr_score = 0;
 bool GAME_STATUS = TRUE;
 Direction CURRENT_DIR = RIGHT;
 int snake_size = 3;
+char FOOD_CHAR = '@';
+char BODY_CHAR = 'o';
 
 int main(void)
 {   
@@ -16,6 +18,7 @@ int main(void)
     start_color();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_RED, COLOR_BLUE);
+    init_pair(3, COLOR_MAGENTA, COLOR_CYAN);
     noecho();
     keypad(stdscr, TRUE);
     cbreak();
@@ -39,8 +42,8 @@ int main(void)
     // Main game loop
       while (GAME_STATUS) {
 //        input();
-        clear();
-        mvaddch(food->y, food->x, '@');
+        erase();
+        mvaddch(food->y, food->x, FOOD_CHAR);
         collision(head);
         print_body(head);
         if (head->x == food->x && head->y == food->y) {
@@ -48,13 +51,13 @@ int main(void)
             head = gen_body(head, 1);
             co_update(head);
             food_gen(head, food);
-            mvaddch(food->y, food->x, '@');
+            mvaddch(food->y, food->x, FOOD_CHAR);
             refresh();
             curr_score += 10;
         }   
-            attron(COLOR_PAIR(2));
+            attron(COLOR_PAIR(3));
             mvprintw(0, 4, "CURR_SCORE: %i", curr_score);
-            attroff(COLOR_PAIR(2));
+            attroff(COLOR_PAIR(3));
             refresh();
             head = movement(head);
             co_update(head);
