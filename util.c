@@ -14,6 +14,7 @@ node* creat()
 		fprintf(stderr, "Error: Not enough memory.\n");
         else
 		perror("Malloc failed");
+    exit(EXIT_FAILURE); // EXITS from the game
 	return NULL;
 	}
 	else  {
