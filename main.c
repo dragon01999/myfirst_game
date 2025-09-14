@@ -63,6 +63,7 @@ int main(void)
             snake_size += 1;
             head = gen_body(head, 1);
             co_update(head);
+            collision(head);
             food_gen(head, food);
             attron(COLOR_PAIR(5));
             mvaddch(food->y, food->x, FOOD_CHAR);
