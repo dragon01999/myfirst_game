@@ -14,14 +14,18 @@ void food_gen(struct node *ptr, struct node *food)
          srand(time(NULL)); //seed generator
          food->x = (rand() % x);
          food->y = (rand() % y);
-         if (fd_is_colliding(ptr, food) || food->y == 0)
+         if (fd_is_colliding(ptr, food)) 
             status = TRUE;
         else
             status = FALSE;
       }
+         if (food->y == 0)
+             food->y += 1;
       attron(COLOR_PAIR(5));
       mvaddch(food->y, food->x, FOOD_CHAR);
       attroff(COLOR_PAIR(5));
+      if (food->y == 0) 
+          food->y += 1;
 //	  refresh();
       return;
 }
