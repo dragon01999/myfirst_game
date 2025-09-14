@@ -1,11 +1,11 @@
 #ifndef MY_HEADER_H
 #define MY_HEADER_H
 
-#define INITIAL_SIZE 3
+#define INITIAL_SIZE 7
 extern bool GAME_STATUS;
 extern char FOOD_CHAR;
 extern char BODY_CHAR;
-
+extern char HEAD_CHAR;
     // Body of the snake
 typedef struct node
 {

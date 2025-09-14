@@ -4,47 +4,55 @@
 #include<ncurses.h>
 #include"util.h"
 
+// Function to generate food
 void food_gen(struct node *ptr, struct node *food)
 {
       int x, y;
       bool status = TRUE;
-	getmaxyx(stdscr, y, x);
-  while (status == TRUE)  {
-	srand(time(NULL)); //seed generator
-        food->x = (rand() % x);
-        food->y = (rand() % y);
-        if (fd_is_colliding(ptr, food))
-          status = TRUE;
+      getmaxyx(stdscr, y, x);
+      while (status == TRUE) {
+         srand(time(NULL)); //seed generator
+         food->x = (rand() % x);
+         food->y = (rand() % y);
+         if (fd_is_colliding(ptr, food) || food->y == 0)
+            status = TRUE;
         else
-          status = FALSE;
-  }
-	mvaddch(food->y, food->x, '@');
-	refresh();
-            return;
+            status = FALSE;
+      }
+      attron(COLOR_PAIR(5));
+      mvaddch(food->y, food->x, FOOD_CHAR);
+      attroff(COLOR_PAIR(5));
+//	  refresh();
+      return;
 }
 
 // Function for printing body
 void print_body(struct node *ptr)
 {
-  int i = 12;
-  node *a = ptr;
-  while (a != NULL)  {
-    mvaddch(a->y, a->x, 'o');
-    mvprintw(i, 5, "x: %i, y: %i", a->x, a->y);
-    mvprintw(i+4, 5,"%i node: %p", i - 12, a);
-    refresh();
-    i++;
+ // int i = 12;
+  node *a = ptr->next;
+  attron(COLOR_PAIR(7));
+  mvaddch(ptr->y, ptr->x, HEAD_CHAR);
+  attroff(COLOR_PAIR(7));
+  while (a != NULL) {
+    attron(COLOR_PAIR(8));
+    mvaddch(a->y, a->x, BODY_CHAR);
+    attron(COLOR_PAIR(8));
+    // mvprintw(i, 5, "x: %i, y: %i", a->x, a->y);
+    //mvprintw(i+4, 5,"%i node: %p", i - 12, a);
+  //  refresh();
+//    i++;
     a = a->next;
   }
+  a = NULL;
 }
 
-// Function to generate body.
-
+// Function to generate body
 node* gen_body(struct node *ptr, int size)
 {
   node *head = ptr;
   node *temp = NULL;
-  for (int i = 0; i < size; i++)  {
+  for (int i = 0; i < size; i++) {
       temp = creat();
       temp->next = head;
       head = temp;
@@ -52,9 +60,10 @@ node* gen_body(struct node *ptr, int size)
   return head;
 }
 
+// Function to check wether food is generated on snake
 bool fd_is_colliding(struct node *ptr, struct node *food)
 {
-  while (ptr != NULL)  {
+  while (ptr != NULL) {
     if (ptr->x == food->x && ptr->y == food->y)
        return TRUE;
     ptr = ptr->next;
@@ -62,9 +71,7 @@ bool fd_is_colliding(struct node *ptr, struct node *food)
   return FALSE;
 }
 
-
-
-
+// Update coordinates
 void co_update(struct node *ptr)
 {
   int MAX_X, MAX_Y;
@@ -116,16 +123,15 @@ void co_update(struct node *ptr)
          break;
   }
   second = NULL;
-//  mvprintw(30, 4, "Y: %i X: %i", second->y, second->x);  refresh();
 }
 
     
-
+// Function to detect collision
 void collision(struct node *ptr)
 {
   int i = 0;
   node *temp = ptr;
-  while (ptr != NULL)  {
+  while (ptr != NULL) {
     ptr = ptr->next;
     if (ptr == NULL)
         return;
@@ -136,52 +142,17 @@ void collision(struct node *ptr)
     }
     i++;
   }
-       return;
+    return;
 }
-
-/* Function for wrap-around
-int WR_AROUND(struct node *ptr) 
-{
-  int MAX_X, MAX_Y;
-  node *head = ptr;
-  getmaxyx(stdscr, MAX_Y, MAX_Y);
-  if (head->y == MAX_Y)
-  {
-    head->y = 0;
-    return 1;
-  }
-  else if (head->x == MAX_X)
-  {
-    head->x = 0;
-    return 2;
-  }
-    return 0; 
-}
-*/
 
 // Function for movement
 node* movement(struct node *ptr)
 {
     TAIL_DELET(ptr);  //deletes tail
     int size = 1;
-    node *temp = ptr;
-//    WR_AROUND(ptr);
-    // Create new head and update coordinates
     ptr = gen_body(ptr, size);
-//    CO_UPDATE(ptr);
-//    ptr->x = temp->x + 1; 
-   // int x, y;
-   // getmaxyx(stdscr, y, x);
-//    ptr->x = (temp->x + 1) % x;
-  //  ptr->y = temp->y;
-    /*int bl =  WR_AROUND(ptr);
-    if (bl == 1)
-      ptr->y = 0;
-    else if (bl == 2) 
-      ptr->x = 0; */
-    mvprintw(15, 4, "x: %i", ptr->x);
-    refresh();
-//    getch();
+//    mvprintw(15, 4, "x: %i", ptr->x);
+//    refresh();
     return ptr;
 }
 

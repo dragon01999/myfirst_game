@@ -29,10 +29,10 @@ void TAIL_DELET(node *ptr)
 	node *a = NULL;
 	temp = ptr;
 	while (temp != NULL) {
-		if (temp->next == NULL)  {
+		if (temp->next == NULL) {
 			free(temp);
-				a->next = NULL;
-				return;
+			a->next = NULL;
+			return;
 		}
 		a = temp;
 		temp = temp->next;
@@ -50,13 +50,15 @@ void input()
 	switch(key)  {
 		
 		case KEY_UP:
-			if (CURRENT_DIR != DOWN)
+			if (CURRENT_DIR != DOWN) {
 			CURRENT_DIR = key;
+            }
 			break;
-    case KEY_DOWN:	
-		  if (CURRENT_DIR != UP) 
+        case KEY_DOWN:	
+	    	if (CURRENT_DIR != UP) {
 			CURRENT_DIR = key;
-			break;
+            }
+		 	break;
 		case KEY_LEFT:
 			if (CURRENT_DIR != RIGHT)
 			CURRENT_DIR = key;
@@ -64,7 +66,7 @@ void input()
 		case KEY_RIGHT:
 			if (CURRENT_DIR != LEFT)
 			CURRENT_DIR = key;
-	    break;
+     	    break;
 		case 'q':
 			GAME_STATUS = FALSE;
 			break;

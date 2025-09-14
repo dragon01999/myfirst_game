@@ -10,19 +10,27 @@ Direction CURRENT_DIR = RIGHT;
 int snake_size = 3;
 char FOOD_CHAR = '@';
 char BODY_CHAR = 'o';
+char HEAD_CHAR = '@';
 
 int main(void)
 {   
     // will intialize screen, input etc...
     initscr();
+    curs_set(0);
+    noecho();                                              keypad(stdscr, TRUE);
+    cbreak();                                              nodelay(stdscr, TRUE);
+    // Colors
     start_color();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
     init_pair(2, COLOR_RED, COLOR_BLUE);
     init_pair(3, COLOR_MAGENTA, COLOR_CYAN);
-    noecho();
-    keypad(stdscr, TRUE);
-    cbreak();
-    nodelay(stdscr, TRUE);
+    init_pair(4, COLOR_RED, COLOR_BLACK);
+    init_pair(5, COLOR_BLUE, COLOR_BLACK);
+    init_pair(6, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(7, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(8, COLOR_CYAN, COLOR_BLACK);
+    
+    // variables and initial nodes
     node *head = NULL;
     node *food = NULL;
     food = creat();
@@ -34,36 +42,39 @@ int main(void)
         co_update(head);
     }
         
-    printw("Fine");
     // Generates intial food
     food_gen(head, food);
     //printing score and highest score on screen
-    mvprintw(0, 3, "Hi");
     // Main game loop
       while (GAME_STATUS) {
 //        input();
         erase();
-        mvaddch(food->y, food->x, FOOD_CHAR);
         collision(head);
+        attron(COLOR_PAIR(5));
+        mvaddch(food->y, food->x, FOOD_CHAR);
+        attroff(COLOR_PAIR(5));
         print_body(head);
+        attron(COLOR_PAIR(3));
+        mvprintw(0, 0, "CURR_SCORE: %i", curr_score);
+        attroff(COLOR_PAIR(3));
+        wnoutrefresh(stdscr);
+        doupdate();
         if (head->x == food->x && head->y == food->y) {
             snake_size += 1;
             head = gen_body(head, 1);
             co_update(head);
             food_gen(head, food);
+            attron(COLOR_PAIR(5));
             mvaddch(food->y, food->x, FOOD_CHAR);
-            refresh();
+            attroff(COLOR_PAIR(5));
             curr_score += 10;
-        }   
-            attron(COLOR_PAIR(3));
-            mvprintw(0, 4, "CURR_SCORE: %i", curr_score);
-            attroff(COLOR_PAIR(3));
-            refresh();
+            }
             head = movement(head);
             co_update(head);
-            napms(1000/2);
+            napms(1000/3);
             input();
-    }
+           // erase();
+      }
 
     clear();
     getch();
