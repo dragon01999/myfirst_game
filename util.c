@@ -26,20 +26,18 @@ node* creat()
 void TAIL_DELET(node *ptr) 
 {
 	//Traverse till end of list and free tail
-	node *temp = NULL;
-	node *a = NULL;
-	temp = ptr;
+	node *temp = ptr;
 	while (temp != NULL) {
 		if (temp->next == NULL) {
 			free(temp);
-			a->next = NULL;
+            ptr->next = NULL;
 			return;
 		}
-		a = temp;
+        ptr = temp;
 		temp = temp->next;
 	}
 	return;
-}
+} /* pointer "ptr" is importatnt here, it holds temp - 1 address. after deleting temp ptr which is temp - 1 after the first iteration, make sures after temp is deleted, a is not pointing to temp but has set its next as null. So basically it prevents dangling pointers */
 
 
 
