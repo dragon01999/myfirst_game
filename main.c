@@ -8,9 +8,9 @@ int curr_score = 0;
 bool GAME_STATUS = TRUE;
 Direction CURRENT_DIR = RIGHT;
 int snake_size = 3;
-char FOOD_CHAR = '@';
-char BODY_CHAR = 'o';
-char HEAD_CHAR = '@';
+char FOOD_CHAR = '#';
+char BODY_CHAR = 't';
+char HEAD_CHAR = '$';
 
 int main(void)
 {   
@@ -18,7 +18,8 @@ int main(void)
     initscr();
     curs_set(0);
     noecho();                                              keypad(stdscr, TRUE);
-    cbreak();                                              nodelay(stdscr, TRUE);
+    cbreak();
+    nodelay(stdscr, TRUE);
     // Colors
     start_color();
     init_pair(1, COLOR_GREEN, COLOR_BLACK);
@@ -47,8 +48,8 @@ int main(void)
     //printing score and highest score on screen
     // Main game loop
       while (GAME_STATUS) {
-//        input();
         erase();
+		input();
         collision(head);
         attron(COLOR_PAIR(5));
         mvaddch(food->y, food->x, FOOD_CHAR);
@@ -72,7 +73,7 @@ int main(void)
             }
             head = movement(head);
             co_update(head);
-            napms(1000/3);
+            napms(400);
             input();
            // erase();
       }
@@ -80,10 +81,11 @@ int main(void)
     clear();
     getch();
     free_all(&head);
-    if (head != NULL)
-        printw("exists %p", head);
-    printw("deleted all %p", head);
+	free(food);
     getch();
     endwin();
+    if (head != NULL)
+        printf("exists %p", head);
+    printf("deleted all %p \n", head);
     return 0;
 }

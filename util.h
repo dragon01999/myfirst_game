@@ -1,7 +1,7 @@
 #ifndef MY_HEADER_H
 #define MY_HEADER_H
 
-#define INITIAL_SIZE 7
+#define INITIAL_SIZE 14
 extern bool GAME_STATUS;
 extern char FOOD_CHAR;
 extern char BODY_CHAR;

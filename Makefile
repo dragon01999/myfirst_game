@@ -18,11 +18,11 @@ all: $(EXEC)
 
 # Rule to create the executable from object files
 $(EXEC): $(OBJS)
-	$(CC) $(OBJS) -o $(EXEC) $(LDFLAGS)
+	$(CC) $(OBJS) -o -g $(EXEC) $(LDFLAGS) 
 
 # Generic rule to compile a .c file into a .o file
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@ -g
 
 # Rule to clean all intermediate and executable files
 clean:
